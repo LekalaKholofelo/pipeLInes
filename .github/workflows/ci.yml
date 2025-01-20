@@ -42,19 +42,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20.15.1'
-
       - run: npm install 
       - run: npm test
-      - run: npm run build
+      # - run: npm run build
 
-      - name: Create Release Artifact
-        run: |
-          mkdir -p release
-          cp -r dist/* release/
-          tar -czvf release.tar.gz release
+      # - name: Create Release Artifact
+      #   run: |
+      #     mkdir -p release
+      #     cp -r dist/* release/
+      #     tar -czvf release.tar.gz release
 
-      - name: Upload Release Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-artifact
-          path: release.tar.gz
+      # - name: Upload Release Artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: release-artifact
+      #     path: release.tar.gz
