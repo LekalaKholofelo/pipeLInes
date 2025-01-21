@@ -1,0 +1,58 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.15.1'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Set permissions for Jest and ESLint
+      run: |
+        chmod +x ./node_modules/.bin/jest
+        chmod +x ./node_modules/.bin/eslint
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build the app
+      run: npm run build
+
+    - name: Create zip file
+      run: |
+        mkdir -p release
+        zip -r release/sample-rest-api.zip . -x '*.git*' -x 'node_modules/**'
+
+    - name: Upload Release Asset
+      uses: actions/upload-artifact@v2
+      with:
+        name: sample-rest-api
+        path: release/sample-rest-api.zip
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        files: release/sample-rest-api.zip
