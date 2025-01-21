@@ -40,19 +40,23 @@ jobs:
         mkdir -p release
         zip -r release/sample-rest-api.zip . -x '*.git*' -x 'node_modules/**'
 
-    - name: Upload Release Asset
-      uses: actions/upload-artifact@v3
-      with:
-        name: sample-rest-api
-        path: release/sample-rest-api.zip
-
     - name: Create GitHub Release
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
         draft: false
         prerelease: false
-        files: release/sample-rest-api.zip
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: release/sample-rest-api.zip
+        asset_name: sample-rest-api.zip
+        asset_content_type: application/zip
