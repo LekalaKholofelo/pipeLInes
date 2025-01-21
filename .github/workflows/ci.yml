@@ -26,6 +26,7 @@ jobs:
     
     - name: Set permissions
       run: chmod +x ./node_modules/.bin/jest
+      run: chmod +x ./node_modules/.bin/eslint
 
     - name: Run tests
       run: npm test
