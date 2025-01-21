@@ -41,7 +41,7 @@ jobs:
         zip -r release/sample-rest-api.zip . -x '*.git*' -x 'node_modules/**'
 
     - name: Upload Release Asset
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: sample-rest-api
         path: release/sample-rest-api.zip
